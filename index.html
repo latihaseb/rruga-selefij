@@ -9,8 +9,7 @@
            1. BIBLIOTEKA CSS (PËRDITËSIME SFONDI)
            ========================================= */
         :root {
-            /* Ngjyrat e kutive janë mbajtur, por sfondi i body është ndryshuar */
-            --card-bg: rgba(15, 20, 30, 0.85); /* Më e errët për daljen mbi yje */
+            --card-bg: rgba(15, 20, 30, 0.85);
             --text-color: #f1f5f9;
             --text-secondary: #94a3b8;
             --accent-color: #FFB93B;
@@ -22,7 +21,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
-            /* SFONDI I RI: Yjet dhe Neon (Marrë nga kodi i Luleve) */
             background-color: #000;
             background-image: radial-gradient(ellipse at top, transparent 0%, #000), radial-gradient(ellipse at bottom, #000, rgba(145, 233, 255, 0.2)), repeating-linear-gradient(220deg, black 0px, black 19px, transparent 19px, transparent 22px), repeating-linear-gradient(189deg, black 0px, black 19px, transparent 19px, transparent 22px), repeating-linear-gradient(148deg, black 0px, black 19px, transparent 19px, transparent 22px), linear-gradient(90deg, #00fffa, #f0f0f0);
             
@@ -33,16 +31,16 @@
             touch-action: pan-y;
         }
 
-        /* --- STILI I BANNERIT TE RI (SHTUAR) --- */
+        /* --- STILI I BANNERIT --- */
         .top-banner {
             width: 100%;
             height: 40px;
-            background-color: #000; /* Sfondi i Zi */
-            color: #d32f2f; /* Teksti i Kuqe */
+            background-color: #000;
+            color: #FDC745;
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 50000; /* Shumë lart mbi Loader dhe Lulet */
+            z-index: 50000;
             display: flex;
             align-items: center;
             border-bottom: 2px solid #d32f2f;
@@ -59,10 +57,10 @@
         header {
             text-align: center;
             padding: 20px 20px;
-            background: rgba(0, 0, 0, 0.85); /* Header me sfond të errët */
+            background: rgba(0, 0, 0, 0.85);
             border-bottom:1px solid var(--border-color);
             position: sticky;
-            top: 40px; /* Ndryshuar për mos u mbuluar nga banneri */
+            top: 40px;
             z-index: 100;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             backdrop-filter: blur(5px);
@@ -140,39 +138,113 @@
 
         .read-btn:hover { background-color: var(--accent-hover); }
 
-        /* Modal (Viewer) */
+        /* --- MODAL STYLE (PËRDITËSIM) --- */
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            /* NDRYSHIM: E kemi zvogëluar dritaren që të mos jetë Full Screen */
+            top: 5vh; 
+            left: 5vw;
+            width: 90vw; 
+            height: 90vh;
             background: var(--modal-bg);
-            z-index: 1000;
+            z-index: 1000; /* Mbi Loader, nën Banner nëse z-index është i lartë, por këtu shohet qartë */
             flex-direction: column;
+            border-radius: 10px; /* Hoqa qoshe të mprehta për stil */
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            border: 1px solid #334155;
+            overflow: hidden; /* Për mbajtjen e kornizave */
         }
         .modal.active { display: flex; }
         
         .modal-header {
-            padding: 15px;
+            padding: 10px 15px;
             background: #1e293b;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom:1px solid #334155;
+            flex-shrink: 0; /* Mos u ngushto */
+            gap: 10px;
         }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .book-title-text {
+            color: white;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.9rem;
+        }
+
+        /* --- STILI I OPSIONIT TË RUAJTJES SË FAQES --- */
+        .bookmark-section {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 5px;
+            border-radius: 4px;
+            border: 1px solid #475569;
+        }
+
+        .page-input {
+            width: 50px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #fff;
+            padding: 4px;
+            text-align: center;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+
+        .save-btn {
+            background: #10b981; /* Jeshile për ruajtje */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .save-btn:hover { background: #059669; }
 
         .close-btn {
-            background: #ef4444; color: white; border: none;
-            padding: 5px 15px; border-radius: 4px; cursor: pointer;
+            background: #ef4444; 
+            color: white; 
+            border: none;
+            padding: 6px 15px; 
+            border-radius: 4px; 
+            cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        iframe { width: 100%; height: 100%; border: none; background: #fff; }
+        iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            background: #fff; 
+        }
 
         /* --- BISMILLAH LOADER CSS --- */
         #loader-wrapper {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-color: #000;
-            z-index: 30000; /* Nën Lulet */
+            z-index: 30000;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -227,7 +299,19 @@
             .book-author { font-size: 0.8rem; margin-bottom: 10px; }
             .read-btn { max-width: 100%; padding: 8px; font-size: 0.9rem; }
             .bismillah-text { font-size: 2rem; }
-            .banner-text { font-size: 0.7rem; } /* Përshtatje për shpejtësi mobile */
+            .banner-text { font-size: 0.7rem; }
+            
+            /* NË MOBILE: Ktheje modal-in pothuajse full screen për lexim më të mirë, por lë pak hapësirë */
+            .modal {
+                width: 100%;
+                height: calc(100% - 50px); /* Lë pak hapësirë lart ose poshtë */
+                top: 40px; /* Nën banner */
+                left: 0;
+                border-radius: 0;
+                border: none;
+            }
+            
+            .book-title-text { display: none; } /* Fshih titullin te mobile për hapësirë */
         }
 
         /* =========================================
@@ -236,15 +320,15 @@
         #flower-stage {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 20000; /* Nën Bismillah, mbi Body */
+            z-index: 20000;
             background-color: #000;
             overflow: hidden;
             perspective: 1000px;
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            opacity: 0; /* Fillimisht e fshehur */
-            pointer-events: none; /* Pa klikim */
+            opacity: 0;
+            pointer-events: none;
             transition: opacity 1s ease;
         }
 
@@ -261,7 +345,6 @@
 
         #flower-stage .flowers { position: relative; transform: scale(0.7); }
         
-        /* Pjesa tjetër e CSS te luleve është e njëjtë, vetëm e mbërthyer shkurtimisht këtu */
         #flower-stage .flower { position: absolute; bottom: 10vmin; transform-origin: bottom center; z-index: 10; --fl-speed: 0.8s; }
         #flower-stage .flower--1 { animation: moving-flower-1 4s linear infinite; }
         #flower-stage .flower--1 .flower__line { height: 70vmin; animation-delay: 0.3s; }
@@ -423,24 +506,24 @@
         #flower-stage .growing-grass { animation: growing-grass-ans 1s 2s backwards; }
         @keyframes growing-grass-ans { 0% { transform: scale(0); } }
 
-        /* Class to pause animation initially */
         .not-loaded * { animation-play-state: paused !important; }
 
     </style>
 </head>
 <body>
 
-    <!-- 0. SHRITI I BANNERIT TE RI (SHTUAR) -->
+    <!-- 0. SHRITI I BANNERIT TE RI -->
     <div class="top-banner">
         <marquee behavior="scroll" direction="left" scrollamount="4" scrolldelay="150" class="banner-text">
-            THOT ALLAHU PER ATE QE NUK E DINI PYSNI NJERZIT E DHIKRIT (DIJETARET) (NAHL 43)  (FEJA MESOHET NGA DIJETARET)
+            E NËSE NUK DINI, PYESNI NJERËZIT E DHIKRIT (DIJETARËT).”
+(EN-NAHL, 43)                 FEJA MËSOHET NGA DIJETARËT)
         </marquee>
     </div>
 
     <!-- AUDIO -->
     <audio src="bismillah.mp3" autoplay></audio>
 
-    <!-- 1. BISMILLAH LOADER (Paraqitet E PARA) -->
+    <!-- 1. BISMILLAH LOADER -->
     <div id="loader-wrapper">
         <div class="bismillah-text">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
         <div class="loading-line-container">
@@ -448,7 +531,7 @@
         </div>
     </div>
 
-    <!-- 2. FLOWER ANIMATION (Paraqitet E DYTA) -->
+    <!-- 2. FLOWER ANIMATION -->
     <div id="flower-stage" class="not-loaded">
         <div class="night"></div>
         <div class="flowers">
@@ -743,7 +826,7 @@
         </div>
     </div>
 
-    <!-- 3. MAIN CONTENT (Faqja kryesore - Hapet e FUNDIT) -->
+    <!-- 3. MAIN CONTENT -->
     <header>
         <div style="color: #F0B13B; font-size: 0.9rem; margin-bottom: 5px;">طريق التبيين السلفي</div>
         <h1>█▓▒▒░░░░RRUGA E SQARIMIT SELEFIJ░░░░▒▒▓█</h1>
@@ -753,10 +836,19 @@
         <!-- Librat shfaqen këtu -->
     </main>
 
-    <!-- Drita e leximit (Modal) -->
+    <!-- Drita e leximit (Modal) E PËRDITËSUAR -->
     <div id="pdf-modal" class="modal">
         <div class="modal-header">
-            <span id="modal-book-title" style="color:white; font-weight:bold;">Titulli</span>
+            <div class="header-controls">
+                <span id="modal-book-title" class="book-title-text">Titulli</span>
+                
+                <!-- OPSIONI I RI: RUAJ FAQEN -->
+                <div class="bookmark-section" title="Ruaj numrin e faqes">
+                    <input type="number" id="page-input" class="page-input" placeholder="Fq">
+                    <button class="save-btn" onclick="saveCurrentPage()">Ruaj</button>
+                </div>
+            </div>
+            
             <button class="close-btn" onclick="closeModal()">Mbyll</button>
         </div>
         <iframe id="pdf-frame" src=""></iframe>
@@ -803,9 +895,8 @@
         };
 
         // ---------------------------------------------------------
-        // LINKU YË TË GJITHËVE ËSHTË VENDOSUR KËTU
+        // LISTA E LIBRAVE
         // ---------------------------------------------------------
-
         const books = [
             { title: "GJYKIMI I ILAHIJEVE (NASHEDAVE)", author: "DIJETAR TE SHUMT", url: "https://drive.google.com/file/d/1Qeimjky-PNMYI-uaP-l52aK02SU4QGWi/preview" },
             { title: "Si te Falim Namazin", author: "SELEFI.ORG", url: "https://drive.google.com/file/d/1rbSD_CETw6XoF5G1ww05vCDV0t7bZ52Z/preview" },
@@ -877,13 +968,14 @@
         ];
 
         // ---------------------------------------------------------
-        // KODI QË BRENDRON FAQJEN
+        // FUNSKIONET E LIBRARISË
         // ---------------------------------------------------------
 
         const gridContainer = document.getElementById('book-grid');
         const modal = document.getElementById('pdf-modal');
         const modalTitle = document.getElementById('modal-book-title');
         const iframe = document.getElementById('pdf-frame');
+        const pageInput = document.getElementById('page-input');
 
         function renderBooks() {
             gridContainer.innerHTML = ''; 
@@ -895,7 +987,7 @@
                         <div class="book-title">${book.title}</div>
                         <div class="book-author">${book.author}</div>
                     </div>
-                    <button class="read-btn" onclick="openBook('${book.url}', '${book.title}')">Lexo</button>
+                    <button class="read-btn" onclick="openBook('${book.url}', '${book.title.replace(/'/g, "\\'")}')">Lexo</button>
                 `;
                 gridContainer.appendChild(card);
             });
@@ -906,14 +998,47 @@
             iframe.src = url;
             modal.classList.add('active');
             document.body.style.overflow = 'hidden'; 
+
+            // 1. Kontrollo nëse ka faqe të ruajtur për këtë libër
+            const savedPage = localStorage.getItem('kutub_page_' + title);
+            
+            if (savedPage) {
+                pageInput.value = savedPage;
+                // Opsionale: Trego një mesazh të vogël që është gjetur faqja
+                console.log("U kthye te faqja: " + savedPage);
+            } else {
+                pageInput.value = '';
+            }
         }
 
         function closeModal() {
             modal.classList.remove('active');
-            iframe.src = "";
+            iframe.src = ""; // Pastron iframe për kursim memory
             document.body.style.overflow = 'auto';
         }
 
+        // FUNKSIONI I RI PËR RUAJTJEN E FAQES
+        function saveCurrentPage() {
+            const title = modalTitle.innerText;
+            const page = pageInput.value;
+
+            if (page && title) {
+                localStorage.setItem('kutub_page_' + title, page);
+                
+                // Efekt i vogël vizual në buton për të konfirmuar
+                const btn = document.querySelector('.save-btn');
+                const originalText = btn.innerText;
+                btn.innerText = "U ruajt!";
+                btn.style.background = "#059669"; // Jeshile e errët
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = "#10b981"; // Jeshile normale
+                }, 1500);
+            }
+        }
+
+        // Mbyll modalin nëse klikon jashtë (në sfondin e zi)
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
