@@ -5,99 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kutub-Selefij</title>
     <style>
-        <canvas id="starfield"></canvas>
-
-<script>
-const canvas = document.getElementById('starfield');
-const ctx = canvas.getContext('2d');
-
-let stars = [];
-const STAR_COUNT = 300;
-
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resize);
-resize();
-
-// Krijojmë yjet
-for (let i = 0; i < STAR_COUNT; i++) {
-    stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 1,
-        speed: Math.random() * 2 + 1
-    });
-}
-
-function animate() {
-    // Sfond transparent ose i zi
-    ctx.fillStyle = 'rgba(0,0,0,0.8)'; 
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = 'white';
-    stars.forEach(star => {
-        star.y += star.speed;           // Lëvizja poshtë
-        if (star.y > canvas.height) {   // Kur kalon poshtë, ripoziciono lart
-            star.y = 0;
-            star.x = Math.random() * canvas.width;
-        }
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI*2);
-        ctx.fill();
-    });
-
-    requestAnimationFrame(animate);
-}
-animate();
-</script>
-
-<style>
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 0;
-}
-</style>
-
+        /* =========================================
+           1. BIBLIOTEKA CSS (PËRDITËSIME SFONDI)
+           ========================================= */
         :root {
             --card-bg: rgba(15, 20, 30, 0.85);
             --text-color: #f1f5f9;
             --text-secondary: #94a3b8;
             --accent-color: #FFB93B;
-            --accent-hover: #0ea5e9;
+            --accent-hover: #FAFAF9;
             --modal-bg: #000000;
             --border-color: rgba(255,255,255, 0.1);
+            --purple-star: rgba(168, 85, 247, 0.8); 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
-            background-color: #000;
-            background-image: radial-gradient(ellipse at top, transparent 0%, #000), radial-gradient(ellipse at bottom, #000, rgba(145, 233, 255, 0.2)), repeating-linear-gradient(220deg, black 0px, black 19px, transparent 19px, transparent 22px), repeating-linear-gradient(189deg, black 0px, black 19px, transparent 19px, transparent 22px), repeating-linear-gradient(148deg, black 0px, black 19px, transparent 19px, transparent 22px), linear-gradient(90deg, #00fffa, #f0f0f0);
-            
+            background-color: #000; /* Sfondi i Zi */
             color: var(--text-color);
             min-height: 100vh;
             padding-bottom: 50px;
             overscroll-behavior-y: none;
             touch-action: pan-y;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* --- STILI I BANNERIT --- */
+        /* --- CANVAS PËR YJET E RENIE (PURPLE RAIN) --- */
+        #falling-stars-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Pas çdo gjëje, kështu shihet prapa logos */
+            pointer-events: none;
+        }
+
+        /* --- STILI I BANNERIT (SHRITI I KUQ LART) --- */
         .top-banner {
             width: 100%;
             height: 40px;
             background-color: #000;
-            color: #FDC745;
+            color: #D0872E;
             position: fixed;
             top: 0;
             left: 0;
             z-index: 50000;
             display: flex;
             align-items: center;
-            border-bottom: 2px solid #d32f2f;
+            border-bottom: 2px solid #000;
         }
 
         .banner-text {
@@ -108,16 +66,18 @@ canvas {
             width: 100%;
         }
 
+        /* --- HEADER (KOKAFAJA) --- */
         header {
             text-align: center;
             padding: 20px 20px;
-            background: rgba(0, 0, 0, 0.85);
+            /* MË TRANSPARENT: Tani yjet shihen prapa */
+            background: rgba(0, 0, 0, 0.6); 
             border-bottom:1px solid var(--border-color);
             position: sticky;
             top: 40px;
-            z-index: 100;
+            z-index: 100; /* Mbi yje, poshtë ngarkuesit */
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px); /* Efekt xhami për lexim më të mirë */
         }
 
         h1 {
@@ -139,6 +99,8 @@ canvas {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 15px;
+            position: relative;
+            z-index: 1;
         }
 
         .book-card {
@@ -152,15 +114,15 @@ canvas {
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             touch-action: manipulation;
         }
 
         .book-card:hover {
-            background: rgba(56, 189, 248, 0.25);
+            background: rgba(56, 189, 248, 0.2);
             border-color: var(--accent-color);
             transform: translateY(-3px);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
         }
 
         .book-title {
@@ -192,22 +154,21 @@ canvas {
 
         .read-btn:hover { background-color: var(--accent-hover); }
 
-        /* --- MODAL STYLE (PËRDITËSIM) --- */
+        /* --- MODAL STYLE --- */
         .modal {
             display: none;
             position: fixed;
-            /* NDRYSHIM: E kemi zvogëluar dritaren që të mos jetë Full Screen */
             top: 5vh; 
             left: 5vw;
             width: 90vw; 
             height: 90vh;
             background: var(--modal-bg);
-            z-index: 1000; /* Mbi Loader, nën Banner nëse z-index është i lartë, por këtu shohet qartë */
+            z-index: 200000; /* Mbi të gjithë */
             flex-direction: column;
-            border-radius: 10px; /* Hoqa qoshe të mprehta për stil */
+            border-radius: 10px; 
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
             border: 1px solid #334155;
-            overflow: hidden; /* Për mbajtjen e kornizave */
+            overflow: hidden; 
         }
         .modal.active { display: flex; }
         
@@ -218,7 +179,7 @@ canvas {
             justify-content: space-between;
             align-items: center;
             border-bottom:1px solid #334155;
-            flex-shrink: 0; /* Mos u ngushto */
+            flex-shrink: 0; 
             gap: 10px;
         }
 
@@ -239,7 +200,6 @@ canvas {
             font-size: 0.9rem;
         }
 
-        /* --- STILI I OPSIONIT TË RUAJTJES SË FAQES --- */
         .bookmark-section {
             display: flex;
             align-items: center;
@@ -262,7 +222,7 @@ canvas {
         }
 
         .save-btn {
-            background: #10b981; /* Jeshile për ruajtje */
+            background: #10b981; 
             color: white;
             border: none;
             padding: 5px 10px;
@@ -293,12 +253,13 @@ canvas {
             background: #fff; 
         }
 
-        /* --- BISMILLAH LOADER CSS --- */
+        /* --- BISMILLAH LOADER CSS (NGRIET LART) --- */
         #loader-wrapper {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-color: #000;
-            z-index: 30000;
+            /* Z-INDEX I LART: Mbuloj bannerin dhe headerin */
+            z-index: 99999; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -355,26 +316,26 @@ canvas {
             .bismillah-text { font-size: 2rem; }
             .banner-text { font-size: 0.7rem; }
             
-            /* NË MOBILE: Ktheje modal-in pothuajse full screen për lexim më të mirë, por lë pak hapësirë */
             .modal {
                 width: 100%;
-                height: calc(100% - 50px); /* Lë pak hapësirë lart ose poshtë */
-                top: 40px; /* Nën banner */
+                height: calc(100% - 50px); 
+                top: 40px; 
                 left: 0;
                 border-radius: 0;
                 border: none;
             }
             
-            .book-title-text { display: none; } /* Fshih titullin te mobile për hapësirë */
+            .book-title-text { display: none; }
         }
 
         /* =========================================
-           2. FLOWER INTRO CSS (LULET)
+           2. FLOWER INTRO CSS (LULET - NGRIET LART)
            ========================================= */
         #flower-stage {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 20000;
+            /* Z-INDEX I LART: Mbuloj bannerin dhe headerin */
+            z-index: 99999; 
             background-color: #000;
             overflow: hidden;
             perspective: 1000px;
@@ -394,7 +355,7 @@ canvas {
             width: 100%;
             height: 100%;
             filter: blur(0.1vmin);
-            background-image: radial-gradient(ellipse at top, transparent 0%, #000), radial-gradient(ellipse at bottom, #000, rgba(145, 233, 255, 0.2)), repeating-linear-gradient(220deg, black 0px, black 19px, transparent 19px, transparent 22px), repeating-linear-gradient(189deg, black 0px, black 19px, transparent 19px, transparent 22px), repeating-linear-gradient(148deg, black 0px, black 19px, transparent 19px, transparent 22px), linear-gradient(90deg, #00fffa, #f0f0f0);
+            background-image: radial-gradient(ellipse at top, transparent 0%, #000), radial-gradient(ellipse at bottom, #000, rgba(145, 233, 255, 0.1));
         }
 
         #flower-stage .flowers { position: relative; transform: scale(0.7); }
@@ -566,11 +527,16 @@ canvas {
 </head>
 <body>
 
+    <!-- 0. BACKGROUND ANIMATION CANVAS (YJET E RENIE) -->
+    <canvas id="falling-stars-canvas"></canvas>
+
     <!-- 0. SHRITI I BANNERIT TE RI -->
     <div class="top-banner">
         <marquee behavior="scroll" direction="left" scrollamount="4" scrolldelay="150" class="banner-text">
-            E NËSE NUK DINI, PYESNI NJERËZIT E DHIKRIT (DIJETARËT).”
-(EN-NAHL, 43)                 FEJA MËSOHET NGA DIJETARËT)
+            PËR ATË QË NUK DINI, PYESNI NJERËZIT E DHIKRIT (DIJETARËT).
+(EN-NAHL, 43)
+
+FEJA MËSOHET NGA DIJETARËT.
         </marquee>
     </div>
 
@@ -910,42 +876,105 @@ canvas {
 
     <script>
         // ---------------------------------------------------------
+        // LOGIKA E ANIMACIONIT TË YJEVE (CANVAS)
+        // ---------------------------------------------------------
+        const canvas = document.getElementById('falling-stars-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let stars = [];
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Star {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * height; 
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = -10; 
+                this.size = Math.random() * 2 + 1; 
+                this.speed = Math.random() * 1 + 0.5; 
+                this.opacity = Math.random() * 0.5 + 0.3; 
+            }
+
+            update() {
+                this.y += this.speed;
+                if (this.y > height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(168, 85, 247, ${this.opacity})`; 
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = "rgba(168, 85, 247, 0.8)";
+                ctx.fill();
+            }
+        }
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < 100; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, width, height);
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+            requestAnimationFrame(animateStars);
+        }
+
+        initStars();
+        animateStars();
+
+
+        // ---------------------------------------------------------
         // LOGIKA E SEKUENCES: BISMILLAH -> LULET -> FAQJA
         // ---------------------------------------------------------
         window.onload = () => {
-            const loader = document.getElementById('loader-wrapper'); // Bismillah
-            const flowerStage = document.getElementById('flower-stage'); // Lulet
+            const loader = document.getElementById('loader-wrapper'); 
+            const flowerStage = document.getElementById('flower-stage'); 
 
-            // 1. Fillimi: Bismillah është i dukshëm. Lulet janë të fshehura (opacity: 0).
-
-            // 2. Pas 2.5 sekonda (Mbaron Bismillah)
+            // 2. Pas 2.5 sekonda
             setTimeout(() => {
-                // Zhduku Bismillah
                 loader.style.opacity = '0';
                 
                 setTimeout(() => {
-                    // 3. Hape Lulet
                     loader.style.display = 'none';
-                    flowerStage.style.opacity = '1'; // Shfaq Lulet
+                    flowerStage.style.opacity = '1'; 
                     flowerStage.style.pointerEvents = 'all';
                     
-                    // Fillo Animacionin
                     flowerStage.classList.remove('not-loaded');
-                }, 1000); // Koha e zbehjes
+                }, 1000); 
 
             }, 2500);
 
-            // 4. Pas 6 sekonda (Mbaron Animacioni i Luleve)
+            // 4. Pas 6 sekonda (Lulet)
             setTimeout(() => {
-                // Zhduku Lulet
                 flowerStage.style.opacity = '0';
                 
                 setTimeout(() => {
-                    // 5. Hiq Lulet (Tani shfaqet Body që ka sfondin e ri)
                     flowerStage.style.display = 'none';
                 }, 1000);
 
-            }, 2500 + 6000); // 2.5s + 6s
+            }, 2500 + 6000); 
         };
 
         // ---------------------------------------------------------
@@ -976,7 +1005,7 @@ canvas {
             { title: "Disa_prej_formave_të_padrejtësisë që i bëhen Gruas", author: "Abdul Aizijz Aali Shejkh", url: "https://drive.google.com/file/d/1nya_REq7PZIU3-sTiqYlZyRkC4xPp-VA/preview" },
             { title: "Ese rreth gjakrave natyrale të grave", author: "Shejkh Muhamed ibn Salih el-Uthejmin", url: "https://drive.google.com/file/d/1XMhMyQf23zQS1mnzg8g_osPw3YYx_-4c/preview" },
             { title: "Fitneja-e-Khauarixhëve", author: "Shejkh-Salih-Aali-Shejkh", url: "https://drive.google.com/file/d/1R8yl8Mr03P8jPZ76NpvkaV7trO8cx0QS/preview" },
-            { title: "Gjykimi Individit duke u bazuar mbi Shoqerine e tij", author: "Shejkh Xhemal ibn Furajhan el-Harithi", url: "https://drive.google.com/file/d/1PDvf8TFcZyEi4DLxDbft-fT6w8AePZ_z/preview" },
+            { title: "Gjykimi Individit duke u bazuar mbi Shoqerine e tij", author: "Shejkh Xhemal ibn Furajhan el-Harithi", url: "https://drive.google.com/file/d/1PDvf8TFcZyEi4DLxDbft-fT6wAePZ_z/preview" },
             { title: "Këshilla të Shkëlqyera për ata që janë Penduar", author: "Ebu Abdullah Ahmed Ibn Muhamed esh-Shihhi", url: "https://drive.google.com/file/d/11XvPqVVpGJlMlBt3IfL8D5YO8I3ggdyo/preview" },
             { title: "Keshilla gruas muslimane", author: "Shejkh Salih el - Feuzan", url: "https://drive.google.com/file/d/18niW4htabbWKBlIG5ua5fVT3p4Pu-e50/preview" },
             { title: "Ku është Allahu", author: "28", url: "https://drive.google.com/file/d/1e1n1JTrHThlggcZvrwQRLkl-b56nXiUS/preview" },
@@ -1001,7 +1030,7 @@ canvas {
             { title: "Tekfiri Tefxhiri dhe Paqja", author: "Shejkh Abdul-Muhsin el Abbad el-Bedr", url: "https://drive.google.com/file/d/1ifN3RhQ5ipDWsdiPoDdCJXejiEBibalq/preview" },
             { title: "Shpjegimi i Tre Parimeve", author: "Abdullah En Nexhmi", url: "https://drive.google.com/file/d/1Pk6jySQAr7ptNp-EHg8XBFDvulBPkEnp/preview" },
             { title: "Tri parimet themelore", author: "Muhammed Ibën ‘Abdul-Uehhab", url: "https://drive.google.com/file/d/15PlgSIipkWchdTfX-KYr0Hyj48PvXBVo/preview" },
-            { title: "Riperteritja e Imanit", author: "Abdurr Rrazzaak ibn Abdul-Muhsin el-Beder", url: "https://drive.google.com/file/d/1hEiDOLiH-Mrz52MSA8WaA2PRsJp0hSy5/preview" },
+            { title: "Riperteritja e Imanit", author: "Abdurr Rrazzaq ibn Abdul-Muhsin el-Beder", url: "https://drive.google.com/file/d/1hEiDOLiH-Mrz52MSA8WaA2PRsJp0hSy5/preview" },
             { title: "Selefizmi eshte Anija e Nuhut Alejhisselam", author: "Autori 51", url: "https://drive.google.com/file/d/1t7GDcSX8pK2fmJZ8xDrXZCGdO2Ws9OqM/preview" },
             { title: "Atentat me bomba ne peshoren Islamit", author: "Abdur-Rrazzak el-Beder", url: "https://drive.google.com/file/d/1KMr1IGOO_KKBi1c0kpasUTvTFgURiAL0/preview" },
             { title: "Delirja dhe Edukimi", author: "Muhammed Nasirudin el-Albanij", url: "https://drive.google.com/file/d/1GJ8_a8c_UuQ_v35Y8HLbQJLsYrQuUk59/preview" },
@@ -1053,12 +1082,10 @@ canvas {
             modal.classList.add('active');
             document.body.style.overflow = 'hidden'; 
 
-            // 1. Kontrollo nëse ka faqe të ruajtur për këtë libër
             const savedPage = localStorage.getItem('kutub_page_' + title);
             
             if (savedPage) {
                 pageInput.value = savedPage;
-                // Opsionale: Trego një mesazh të vogël që është gjetur faqja
                 console.log("U kthye te faqja: " + savedPage);
             } else {
                 pageInput.value = '';
@@ -1067,11 +1094,10 @@ canvas {
 
         function closeModal() {
             modal.classList.remove('active');
-            iframe.src = ""; // Pastron iframe për kursim memory
+            iframe.src = ""; 
             document.body.style.overflow = 'auto';
         }
 
-        // FUNKSIONI I RI PËR RUAJTJEN E FAQES
         function saveCurrentPage() {
             const title = modalTitle.innerText;
             const page = pageInput.value;
@@ -1079,20 +1105,18 @@ canvas {
             if (page && title) {
                 localStorage.setItem('kutub_page_' + title, page);
                 
-                // Efekt i vogël vizual në buton për të konfirmuar
                 const btn = document.querySelector('.save-btn');
                 const originalText = btn.innerText;
                 btn.innerText = "U ruajt!";
-                btn.style.background = "#059669"; // Jeshile e errët
+                btn.style.background = "#059669"; 
                 
                 setTimeout(() => {
                     btn.innerText = originalText;
-                    btn.style.background = "#10b981"; // Jeshile normale
+                    btn.style.background = "#10b981"; 
                 }, 1500);
             }
         }
 
-        // Mbyll modalin nëse klikon jashtë (në sfondin e zi)
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
