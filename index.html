@@ -1124,4 +1124,39 @@ RAMAZANIT
         renderBooks();
     </script>
 </body>
+/* Këtu përfundon pjesa e prerë e CSS-së tënde */
+        @keyframes flower__g-fr-leaft-ans-8 { 
+            0% { transform-origin: right; transform: rotate(15deg) rotateY(-180deg) scale(0); } 
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        let backgroundAudioPlayed = false;
+
+        // Dëgjon për çdo klikim në faqe (ose në ndonjë buton)
+        document.addEventListener('click', function() {
+            if (!backgroundAudioPlayed) {
+                // Krijon një iframe (dritare të fshehtë) për videon e YouTube
+                let audioIframe = document.createElement('iframe');
+                
+                // Vendosim linkun e videos tuaj (Sta_p-oB_d4) duke shtuar autoplay=1
+                audioIframe.src = "https://www.youtube.com/embed/Sta_p-oB_d4?autoplay=1&playsinline=1&controls=0";
+                
+                // E bëjmë iframe-in plotësisht të padukshëm që të dëgjohet si MP3
+                audioIframe.style.display = "none";
+                audioIframe.style.width = "0";
+                audioIframe.style.height = "0";
+                audioIframe.allow = "autoplay";
+                
+                // E vendosim në body
+                document.body.appendChild(audioIframe);
+                
+                // Sigurohemi që ky proces të ndodhë vetëm në klikimin e parë
+                backgroundAudioPlayed = true;
+            }
+        });
+    </script>
+</body>
 </html>
